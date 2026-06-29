@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html, body, #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg text-text font-body antialiased;
+    background-image: radial-gradient(120% 80% at 50% 0%, #EFE7D6 0%, #F7F2EA 60%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3 {
+    @apply font-display text-text;
+  }
+}
+
+@layer utilities {
+  .phone-frame {
+    @apply mx-auto w-full max-w-phone min-h-full bg-bg;
+    box-shadow: 0 12px 40px -12px rgba(45, 58, 46, 0.15);
+  }
+}
