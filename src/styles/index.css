@@ -7,6 +7,14 @@
 @layer base {
   :root {
     color-scheme: light;
+    --bg: #F7F2EA;
+    --surface: #FFFFFF;
+    --primary: #7B8F73;
+    --primary-hover: #6B7F63;
+    --accent: #C97B5A;
+    --text: #2D3A2E;
+    --text-muted: #6B746A;
+    --border: #E8DFD2;
   }
 
   html, body, #root {
