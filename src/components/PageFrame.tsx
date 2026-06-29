@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 interface Props {
   title?: string
@@ -10,12 +11,13 @@ interface Props {
 
 export default function PageFrame({ title, showBack, children }: Props) {
   const navigate = useNavigate()
+  const reduced = useReducedMotion()
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
+      animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      exit={reduced ? { opacity: 0 } : { opacity: 0, y: -8 }}
       transition={{ duration: 0.28, ease: 'easeOut' }}
       className="phone-frame flex flex-col"
     >
