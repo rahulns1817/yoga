@@ -10,6 +10,9 @@
     --primary: #7B8F73;
     --primary-hover: #6B7F63;
     --accent: #C97B5A;
+    --saffron: #E0A95B;
+    --forest: #1F3329;
+    --forest-deep: #142019;
     --text: #2D3A2E;
     --text-muted: #6B746A;
     --border: #E8DFD2;
@@ -27,12 +30,36 @@
 
   h1, h2, h3 {
     @apply font-display text-text;
+    letter-spacing: -0.01em;
   }
 }
 
 @layer utilities {
   .phone-frame {
-    @apply mx-auto w-full max-w-phone min-h-full bg-bg;
-    box-shadow: 0 12px 40px -12px rgba(45, 58, 46, 0.15);
+    @apply mx-auto w-full max-w-phone min-h-full bg-bg overflow-hidden;
+    box-shadow: 0 24px 60px -20px rgba(20, 32, 25, 0.25);
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .glass-dark {
+    background: rgba(20, 32, 25, 0.55);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .scroll-hide::-webkit-scrollbar { display: none; }
+  .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .grain {
+    background-image:
+      radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 1px;
   }
 }

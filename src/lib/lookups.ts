@@ -1,6 +1,8 @@
 import { PROBLEMS } from '../data/problems'
 import type { Asana, Problem } from '../types'
 
+export { PROBLEMS }
+
 export function getProblem(id: string): Problem | undefined {
   return PROBLEMS.find((p) => p.id === id)
 }
