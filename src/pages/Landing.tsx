@@ -1,10 +1,52 @@
+import { AnimatePresence, motion } from 'framer-motion'
+import { useMemo, useState } from 'react'
+import CategoryCard from '../components/CategoryCard'
 import PageFrame from '../components/PageFrame'
+import SearchBar from '../components/SearchBar'
+import { filterProblems } from '../lib/lookups'
 
 export default function Landing() {
+  const [query, setQuery] = useState('')
+  const results = useMemo(() => filterProblems(query), [query])
+
   return (
     <PageFrame>
-      <h1 className="font-display text-4xl">Sukha</h1>
-      <p className="text-text-muted mt-2">Find ease in your body.</p>
+      <header className="mb-6">
+        <h1 className="font-display text-4xl">Sukha</h1>
+        <p className="text-text-muted mt-1">Find a posture for how you feel.</p>
+      </header>
+
+      <SearchBar
+        value={query}
+        onChange={setQuery}
+        placeholder="Search a feeling — stress, sleep, headache…"
+      />
+
+      <section className="mt-6">
+        {results.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-text-muted">No matches.</p>
+            <p className="text-text-muted text-sm mt-1">Try "stress", "sleep", or "back pain".</p>
+          </div>
+        ) : (
+          <motion.div layout className="grid grid-cols-2 gap-3">
+            <AnimatePresence mode="popLayout">
+              {results.map((p) => (
+                <motion.div
+                  key={p.id}
+                  layout
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.18 }}
+                >
+                  <CategoryCard problem={p} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </section>
     </PageFrame>
   )
 }
