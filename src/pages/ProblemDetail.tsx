@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import AsanaCard from '../components/AsanaCard'
 import PageFrame from '../components/PageFrame'
 import { getProblem } from '../lib/lookups'
+import { useReducedMotion } from '../lib/useReducedMotion'
 import NotFound from './NotFound'
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -16,6 +17,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 export default function ProblemDetail() {
   const { problemId } = useParams()
   const problem = problemId ? getProblem(problemId) : undefined
+  const reduced = useReducedMotion()
 
   if (!problem) return <NotFound />
 
@@ -33,8 +35,8 @@ export default function ProblemDetail() {
         {problem.asanas.map((asana, i) => (
           <motion.li
             key={asana.id}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={reduced ? { opacity: 0 } : { opacity: 0, y: 6 }}
+            animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.25, delay: i * 0.06 }}
           >
             <AsanaCard problem={problem} asana={asana} />

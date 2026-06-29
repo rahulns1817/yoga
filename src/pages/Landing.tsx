@@ -1,13 +1,22 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import CategoryCard from '../components/CategoryCard'
 import PageFrame from '../components/PageFrame'
 import SearchBar from '../components/SearchBar'
 import { filterProblems } from '../lib/lookups'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 export default function Landing() {
   const [query, setQuery] = useState('')
-  const results = useMemo(() => filterProblems(query), [query])
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+  const reduced = useReducedMotion()
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query), 150)
+    return () => clearTimeout(t)
+  }, [query])
+
+  const results = useMemo(() => filterProblems(debouncedQuery), [debouncedQuery])
 
   return (
     <PageFrame>
@@ -35,9 +44,9 @@ export default function Landing() {
                 <motion.div
                   key={p.id}
                   layout
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  initial={reduced ? { opacity: 0 } : { opacity: 0, y: 8 }}
+                  animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                  exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.18 }}
                 >
                   <CategoryCard problem={p} />

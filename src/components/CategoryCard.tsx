@@ -1,17 +1,20 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import type { Problem } from '../types'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 interface Props {
   problem: Problem
 }
 
 export default function CategoryCard({ problem }: Props) {
+  const reduced = useReducedMotion()
+
   return (
-    <motion.div whileTap={{ scale: 0.97 }}>
+    <motion.div whileTap={reduced ? undefined : { scale: 0.97 }}>
       <Link
         to={`/problem/${problem.id}`}
-        className="block aspect-square rounded-card bg-surface border border-border p-4 flex flex-col justify-between hover:border-primary/60 transition"
+        className="aspect-square rounded-card bg-surface border border-border p-4 flex flex-col justify-between hover:border-primary/60 transition"
       >
         <span className="text-3xl" aria-hidden>{problem.icon}</span>
         <div>

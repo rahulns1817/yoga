@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import type { Asana, Problem } from '../types'
+import { formatDuration } from '../lib/format'
+import { useReducedMotion } from '../lib/useReducedMotion'
 import DifficultyChip from './DifficultyChip'
 import PoseIllustration from './PoseIllustration'
 
@@ -10,8 +12,10 @@ interface Props {
 }
 
 export default function AsanaCard({ problem, asana }: Props) {
+  const reduced = useReducedMotion()
+
   return (
-    <motion.div whileTap={{ scale: 0.98 }}>
+    <motion.div whileTap={reduced ? undefined : { scale: 0.98 }}>
       <Link
         to={`/asana/${problem.id}/${asana.id}`}
         className="flex items-center gap-4 rounded-card bg-surface border border-border p-4 hover:border-primary/60 transition"
@@ -30,11 +34,4 @@ export default function AsanaCard({ problem, asana }: Props) {
       </Link>
     </motion.div>
   )
-}
-
-function formatDuration(sec: number): string {
-  if (sec < 60) return `${sec}s`
-  const m = Math.floor(sec / 60)
-  const s = sec % 60
-  return s === 0 ? `${m} min` : `${m}m ${s}s`
 }

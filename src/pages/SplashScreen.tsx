@@ -28,12 +28,7 @@ export default function SplashScreen() {
   }
 
   return (
-    <button
-      type="button"
-      onClick={skip}
-      aria-label="Skip splash"
-      className="phone-frame flex flex-col items-center justify-center text-center px-6 py-12 min-h-screen"
-    >
+    <div className="phone-frame relative flex flex-col items-center justify-center text-center px-6 py-12 min-h-screen">
       <LotusAnimation reduced={reduced} />
       <motion.p
         className="font-mantra italic text-2xl text-text mt-10 leading-snug"
@@ -43,6 +38,12 @@ export default function SplashScreen() {
       >
         Loga Samastha Sukhino Bhavanthu
       </motion.p>
-    </button>
+      <button
+        type="button"
+        onClick={skip}
+        aria-label="Skip splash"
+        className="absolute inset-0 cursor-default focus:outline-none"
+      />
+    </div>
   )
 }

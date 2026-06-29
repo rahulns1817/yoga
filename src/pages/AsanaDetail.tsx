@@ -1,30 +1,30 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import DifficultyChip from '../components/DifficultyChip'
 import PageFrame from '../components/PageFrame'
 import PoseIllustration from '../components/PoseIllustration'
+import { formatDuration } from '../lib/format'
 import { getAsana, getProblem } from '../lib/lookups'
+import { useReducedMotion } from '../lib/useReducedMotion'
 import NotFound from './NotFound'
-
-function formatDuration(sec: number): string {
-  if (sec < 60) return `${sec}s`
-  const m = Math.floor(sec / 60)
-  const s = sec % 60
-  return s === 0 ? `${m} min` : `${m}m ${s}s`
-}
 
 export default function AsanaDetail() {
   const { problemId, asanaId } = useParams()
   const problem = problemId ? getProblem(problemId) : undefined
   const asana = problemId && asanaId ? getAsana(problemId, asanaId) : undefined
   const [toast, setToast] = useState(false)
+  const reduced = useReducedMotion()
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current) }, [])
 
   if (!problem || !asana) return <NotFound />
 
   const showToast = () => {
     setToast(true)
-    setTimeout(() => setToast(false), 2200)
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    toastTimer.current = setTimeout(() => setToast(false), 2200)
   }
 
   return (
@@ -54,8 +54,8 @@ export default function AsanaDetail() {
           {asana.benefits.map((b, i) => (
             <motion.li
               key={i}
-              initial={{ opacity: 0, x: -6 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={reduced ? { opacity: 0 } : { opacity: 0, x: -6 }}
+              animate={reduced ? { opacity: 1 } : { opacity: 1, x: 0 }}
               transition={{ duration: 0.22, delay: i * 0.06 }}
               className="flex gap-3 text-text"
             >
@@ -72,8 +72,8 @@ export default function AsanaDetail() {
           {asana.steps.map((s, i) => (
             <motion.li
               key={i}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={reduced ? { opacity: 0 } : { opacity: 0, y: 6 }}
+              animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: 0.1 + i * 0.07 }}
               className="flex gap-3"
             >
@@ -87,7 +87,7 @@ export default function AsanaDetail() {
       <button
         type="button"
         onClick={showToast}
-        className="mt-10 w-full rounded-btn bg-accent text-white font-medium py-3.5 hover:opacity-90 active:scale-[0.99] transition"
+        className={`mt-10 w-full rounded-btn bg-accent text-white font-medium py-3.5 hover:opacity-90 transition${reduced ? '' : ' active:scale-[0.99]'}`}
       >
         Begin practice
       </button>
@@ -95,9 +95,9 @@ export default function AsanaDetail() {
       <AnimatePresence>
         {toast && (
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
+            initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
             className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-text text-white text-sm px-4 py-2 rounded-pill shadow-lg"
             role="status"
           >
