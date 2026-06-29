@@ -37,8 +37,8 @@ export default function SplashScreen() {
       <LotusAnimation reduced={reduced} />
       <motion.p
         className="font-mantra italic text-2xl text-text mt-10 leading-snug"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={reduced ? { opacity: 0 } : { opacity: 0, y: 8 }}
+        animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: reduced ? 0.4 : 1.6, ease: 'easeOut' }}
       >
         Loga Samastha Sukhino Bhavanthu
