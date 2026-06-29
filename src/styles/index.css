@@ -29,7 +29,8 @@
   }
 
   h1, h2, h3 {
-    @apply font-display text-text;
+    @apply font-display;
+    color: inherit;
     letter-spacing: -0.01em;
   }
 }

@@ -38,24 +38,30 @@ export default function AsanaDetail() {
 
   return (
     <PageFrame variant="floating-back" showBack>
-      <section className="relative h-[420px] w-full overflow-hidden">
+      <section className="relative h-[460px] w-full overflow-hidden">
         <img
           src={heroPhoto}
           alt=""
           aria-hidden
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: 'center 25%' }}
+          style={{ objectPosition: 'center 22%' }}
         />
-        <div className="absolute inset-0 bg-overlay-full" aria-hidden />
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" aria-hidden />
+        <div
+          className="absolute inset-x-0 bottom-0 px-5 pb-6 pt-32 text-white"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(20,32,25,0.97) 0%, rgba(20,32,25,0.90) 35%, rgba(20,32,25,0.50) 70%, transparent 100%)',
+          }}
+        >
           <p className="text-saffron text-[11px] uppercase tracking-[0.3em] font-medium">
             For {problem.name.toLowerCase()}
           </p>
-          <h1 className="font-display text-4xl mt-2 leading-tight">{asana.sanskritName}</h1>
-          <p className="text-white/85 text-base mt-1">{asana.englishName}</p>
-          <div className="mt-4 flex items-center gap-2">
+          <h1 className="font-display text-4xl mt-2 leading-tight drop-shadow">{asana.sanskritName}</h1>
+          <p className="text-white/90 text-base mt-1 drop-shadow">{asana.englishName}</p>
+          <div className="mt-4 flex items-center gap-2 flex-wrap">
             <DifficultyChip level={asana.difficulty} />
-            <span className="inline-flex items-center gap-1 rounded-pill glass-dark text-white px-3 py-1 text-xs font-medium">
+            <span className="inline-flex items-center gap-1 rounded-pill glass-dark border border-white/15 text-white px-3 py-1 text-xs font-medium">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="9" />
                 <polyline points="12 7 12 12 15 14" />

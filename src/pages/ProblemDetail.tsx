@@ -26,15 +26,21 @@ export default function ProblemDetail() {
 
   return (
     <PageFrame variant="floating-back" showBack>
-      <section className="relative h-72 w-full overflow-hidden">
+      <section className="relative h-80 w-full overflow-hidden">
         <img src={photo} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 25%' }} />
-        <div className="absolute inset-0 bg-overlay-full" aria-hidden />
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" aria-hidden />
+        <div
+          className="absolute inset-x-0 bottom-0 px-5 pb-6 pt-28 text-white"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(20,32,25,0.97) 0%, rgba(20,32,25,0.90) 35%, rgba(20,32,25,0.50) 70%, transparent 100%)',
+          }}
+        >
           <p className="text-saffron text-[11px] uppercase tracking-[0.3em] font-medium">
             {CATEGORY_LABEL[problem.category] ?? problem.category}
           </p>
-          <h1 className="font-display text-4xl mt-2 leading-tight">{problem.name}</h1>
-          <p className="text-white/80 mt-2 text-sm max-w-[28ch]">{problem.shortDescription}</p>
+          <h1 className="font-display text-4xl mt-2 leading-tight drop-shadow">{problem.name}</h1>
+          <p className="text-white/90 mt-2 text-sm max-w-[28ch] drop-shadow">{problem.shortDescription}</p>
         </div>
       </section>
 

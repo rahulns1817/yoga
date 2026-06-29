@@ -2,29 +2,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard'
+import FactsCarousel from '../components/FactsCarousel'
 import PageFrame from '../components/PageFrame'
 import SearchBar from '../components/SearchBar'
 import { HERO_PHOTOS, INSPIRATION_PHOTO, POSE_OF_DAY_PHOTO } from '../lib/images'
 import { filterProblems, PROBLEMS } from '../lib/lookups'
 import { useReducedMotion } from '../lib/useReducedMotion'
-
-const DID_YOU_KNOW = [
-  {
-    stat: '5,000+',
-    label: 'years of practice',
-    body: 'Yoga’s roots stretch back to the Indus-Saraswati civilization, refined over millennia.',
-  },
-  {
-    stat: '20 min',
-    label: 'a day, real shift',
-    body: 'Even a short daily practice measurably lowers cortisol and improves sleep onset.',
-  },
-  {
-    stat: '8 weeks',
-    label: 'to rewire stress',
-    body: 'Consistent practice for two months reshapes how your nervous system handles tension.',
-  },
-]
 
 const DAILY_TIPS = [
   { emoji: '🌅', title: 'Wake gently', body: 'Three breaths before checking your phone.' },
@@ -46,14 +29,17 @@ export default function Landing() {
   const results = useMemo(() => filterProblems(debouncedQuery), [debouncedQuery])
 
   const featuredProblem = useMemo(() => PROBLEMS.find((p) => p.id === 'stress') ?? PROBLEMS[0], [])
-  const featuredAsana = featuredProblem.asanas[0]
+  const featuredAsana = useMemo(
+    () => featuredProblem.asanas.find((a) => a.id === 'setu-bandhasana') ?? featuredProblem.asanas[0],
+    [featuredProblem],
+  )
 
   return (
     <PageFrame variant="bare">
       <Hero />
 
-      <div className="relative -mt-10 px-5 z-10">
-        <div className="rounded-card glass shadow-lift p-3">
+      <div className="px-5 mt-6">
+        <div className="rounded-card glass shadow-lift p-2.5 border border-white/40">
           <SearchBar
             value={query}
             onChange={setQuery}
@@ -62,9 +48,13 @@ export default function Landing() {
         </div>
       </div>
 
-      <FeaturedPose problem={featuredProblem} asanaName={featuredAsana.englishName} photo={POSE_OF_DAY_PHOTO} />
+      <FeaturedPose
+        problem={featuredProblem}
+        asanaName={featuredAsana.englishName}
+        photo={POSE_OF_DAY_PHOTO}
+      />
 
-      <section className="px-5 mt-12">
+      <section id="how-are-you-feeling" className="px-5 mt-14">
         <SectionHeader eyebrow="Categories" title="How are you feeling?" />
         {results.length === 0 ? (
           <div className="rounded-card border border-border bg-surface/60 p-8 text-center mt-6">
@@ -93,7 +83,12 @@ export default function Landing() {
         )}
       </section>
 
-      <DidYouKnowSection />
+      <section className="mt-14 px-5">
+        <SectionHeader eyebrow="Wisdom & research" title="Why this works" />
+      </section>
+      <div className="mt-6">
+        <FactsCarousel />
+      </div>
 
       <QuoteBreak />
 
@@ -112,7 +107,7 @@ export default function Landing() {
 
 function Hero() {
   return (
-    <section className="relative h-[520px] w-full overflow-hidden">
+    <section className="relative h-[600px] w-full overflow-hidden">
       <img
         src={HERO_PHOTOS[0]}
         alt=""
@@ -120,34 +115,41 @@ function Hero() {
         className="absolute inset-0 h-full w-full object-cover"
         style={{ objectPosition: 'center 30%' }}
       />
-      <div className="absolute inset-0 bg-overlay-full" aria-hidden />
+      <div
+        className="absolute inset-0"
+        aria-hidden
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(20,32,25,0.55) 0%, rgba(20,32,25,0.30) 30%, rgba(20,32,25,0.70) 70%, rgba(20,32,25,0.95) 100%)',
+        }}
+      />
       <div className="absolute inset-0 grain opacity-30 pointer-events-none" aria-hidden />
 
-      <div className="relative h-full flex flex-col justify-between px-6 py-8 text-white">
+      <div className="relative h-full flex flex-col px-6 py-7 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-full glass-dark flex items-center justify-center font-display text-base">ॐ</div>
+            <div className="h-10 w-10 rounded-full glass-dark border border-white/15 flex items-center justify-center font-display text-base">ॐ</div>
             <div>
               <p className="font-display text-base leading-none">Sukha</p>
               <p className="text-[10px] uppercase tracking-[0.25em] text-white/60">Daily wellness</p>
             </div>
           </div>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-white/60 px-3 py-1 rounded-full border border-white/20">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-white/70 px-3 py-1 rounded-full border border-white/25 glass-dark">
             Beta
           </span>
         </div>
 
-        <div className="max-w-[18rem]">
-          <p className="text-saffron text-xs uppercase tracking-[0.25em] mb-3">A pose for every feeling</p>
-          <h1 className="font-display text-[44px] leading-[1.05] font-semibold">
-            Find your <span className="italic text-saffron/95">sukha</span>.
+        <div className="flex-1 flex flex-col justify-end pb-4 max-w-[22rem]">
+          <p className="text-saffron text-xs uppercase tracking-[0.3em] mb-3 font-medium drop-shadow">A pose for every feeling</p>
+          <h1 className="font-display text-[46px] leading-[1.04] font-semibold drop-shadow-sm">
+            Find your <span className="italic text-saffron">sukha</span>.
           </h1>
-          <p className="text-white/80 mt-3 text-sm leading-relaxed">
+          <p className="text-white/90 mt-4 text-sm leading-relaxed max-w-[24ch] drop-shadow">
             Modern remedies, ancient postures. Built for stress, sleep, posture, and everything in between.
           </p>
           <a
             href="#how-are-you-feeling"
-            className="inline-flex items-center gap-2 mt-6 rounded-pill bg-saffron text-forest-deep font-medium px-5 py-3 text-sm shadow-lift hover:bg-saffron-deep transition"
+            className="inline-flex w-fit items-center gap-2 mt-6 rounded-pill bg-saffron text-forest-deep font-medium px-5 py-3 text-sm shadow-lift hover:bg-saffron-deep transition"
           >
             Find a remedy
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -171,30 +173,34 @@ function FeaturedPose({
   photo: string
 }) {
   return (
-    <section className="px-5 mt-12">
+    <section className="px-5 mt-14">
       <SectionHeader eyebrow="Pose of the day" title="Open your day softly" />
       <Link
         to={`/problem/${problem.id}`}
-        className="block mt-5 relative overflow-hidden rounded-card shadow-lift h-72"
+        className="block mt-5 relative overflow-hidden rounded-card shadow-lift h-80"
       >
-        <img src={photo} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-overlay-bottom" aria-hidden />
-        <div className="relative h-full flex flex-col justify-between p-5 text-white">
+        <img src={photo} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 20%' }} />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/40 to-transparent" aria-hidden />
+        <div
+          className="absolute inset-x-0 bottom-0 px-5 pb-5 pt-24 text-white"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(20,32,25,0.97) 0%, rgba(20,32,25,0.88) 40%, rgba(20,32,25,0.45) 75%, transparent 100%)',
+          }}
+        >
           <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-saffron">Featured</span>
-            <span className="h-1 w-1 rounded-full bg-white/40" />
-            <span className="text-xs text-white/70">Beginner · 1 min hold</span>
+            <span className="text-[10px] uppercase tracking-[0.25em] text-saffron font-medium">Featured</span>
+            <span className="h-1 w-1 rounded-full bg-white/50" />
+            <span className="text-xs text-white/75">Intermediate · 1 min hold</span>
           </div>
-          <div>
-            <p className="text-saffron text-xs uppercase tracking-[0.25em]">For {problem.name.toLowerCase()}</p>
-            <h3 className="font-display text-2xl mt-1 leading-tight">{asanaName}</h3>
-            <p className="text-white/75 text-sm mt-1">Counter slumped posture, expand the breath.</p>
-            <div className="inline-flex items-center gap-2 mt-4 rounded-pill bg-white text-forest-deep font-medium px-4 py-2 text-sm">
-              Practice now
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </div>
+          <p className="text-saffron text-xs uppercase tracking-[0.25em] mt-3 font-medium">For {problem.name.toLowerCase()}</p>
+          <h3 className="font-display text-2xl mt-1 leading-tight">{asanaName}</h3>
+          <p className="text-white/85 text-sm mt-1.5">Counter slumped posture, expand the breath.</p>
+          <div className="inline-flex items-center gap-2 mt-5 rounded-pill bg-white text-forest-deep font-medium px-4 py-2 text-sm hover:bg-saffron transition">
+            Practice now
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
           </div>
         </div>
       </Link>
@@ -206,51 +212,17 @@ function SectionHeader({ eyebrow, title, dark }: { eyebrow: string; title: strin
   const colorEyebrow = dark ? 'text-saffron' : 'text-primary'
   const colorTitle = dark ? 'text-white' : 'text-text'
   return (
-    <div id={title === 'How are you feeling?' ? 'how-are-you-feeling' : undefined}>
+    <div>
       <p className={`text-[11px] uppercase tracking-[0.3em] font-medium ${colorEyebrow}`}>{eyebrow}</p>
       <h2 className={`font-display text-3xl mt-2 leading-tight ${colorTitle}`}>{title}</h2>
     </div>
   )
 }
 
-function DidYouKnowSection() {
-  return (
-    <section
-      className="mt-14 px-5 py-12 relative overflow-hidden"
-      style={{
-        backgroundImage:
-          'linear-gradient(180deg, #1F3329 0%, #142019 100%)',
-      }}
-    >
-      <div className="absolute inset-0 grain opacity-40 pointer-events-none" aria-hidden />
-      <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-saffron/15 blur-3xl pointer-events-none" aria-hidden />
-      <div className="absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden />
-
-      <div className="relative">
-        <SectionHeader eyebrow="Did you know" title="Why this works" dark />
-        <div className="mt-6 flex flex-col gap-3">
-          {DID_YOU_KNOW.map((item, i) => (
-            <div
-              key={i}
-              className="rounded-card glass-dark border border-white/10 p-5"
-            >
-              <div className="flex items-baseline gap-2">
-                <p className="font-display text-3xl text-saffron font-semibold">{item.stat}</p>
-                <p className="text-white/60 text-xs uppercase tracking-widest">{item.label}</p>
-              </div>
-              <p className="text-white/80 text-sm mt-2 leading-relaxed">{item.body}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 function QuoteBreak() {
   return (
-    <section className="px-5 py-14 text-center">
-      <svg viewBox="0 0 24 24" className="h-6 w-6 mx-auto text-accent/70" fill="currentColor" aria-hidden>
+    <section className="px-5 py-16 text-center">
+      <svg viewBox="0 0 24 24" className="h-7 w-7 mx-auto text-accent/70" fill="currentColor" aria-hidden>
         <path d="M7 7h4v4H7a3 3 0 0 1 0-6V3a5 5 0 0 0 0 10h4V7H7zm10 0h4v4h-4a3 3 0 0 1 0-6V3a5 5 0 0 0 0 10h4V7h-4z" />
       </svg>
       <p className="font-mantra italic text-3xl text-text mt-4 leading-snug">
@@ -288,18 +260,25 @@ function DailyTipsCarousel() {
 
 function InspirationCta({ photo }: { photo: string }) {
   return (
-    <section className="mt-12 mx-5 relative h-72 rounded-card overflow-hidden shadow-lift">
+    <section className="mt-14 mx-5 relative h-80 rounded-card overflow-hidden shadow-lift">
       <img src={photo} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: 'center 30%' }} />
-      <div className="absolute inset-0 bg-overlay-full" aria-hidden />
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-6">
-        <p className="text-saffron text-xs uppercase tracking-[0.3em]">Start small</p>
-        <h3 className="font-display text-3xl mt-3 leading-tight max-w-[14ch]">Begin where you are.</h3>
-        <p className="text-white/75 text-sm mt-3 max-w-[26ch]">
+      <div
+        className="absolute inset-0"
+        aria-hidden
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(20,32,25,0.40) 0%, rgba(20,32,25,0.65) 50%, rgba(20,32,25,0.92) 100%)',
+        }}
+      />
+      <div className="absolute inset-0 flex flex-col items-center justify-end text-center text-white px-6 pb-7">
+        <p className="text-saffron text-xs uppercase tracking-[0.3em] drop-shadow">Start small</p>
+        <h3 className="font-display text-3xl mt-3 leading-tight max-w-[14ch] drop-shadow">Begin where you are.</h3>
+        <p className="text-white/90 text-sm mt-3 max-w-[28ch] drop-shadow">
           One pose. One breath. One minute. That’s enough to begin.
         </p>
         <a
           href="#how-are-you-feeling"
-          className="inline-flex items-center gap-2 mt-5 rounded-pill bg-white text-forest-deep font-medium px-5 py-3 text-sm hover:bg-saffron hover:text-forest-deep transition"
+          className="inline-flex items-center gap-2 mt-5 rounded-pill bg-white text-forest-deep font-medium px-5 py-3 text-sm hover:bg-saffron transition"
         >
           Explore poses
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">

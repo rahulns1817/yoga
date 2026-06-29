@@ -32,9 +32,11 @@ export default {
       },
       backgroundImage: {
         'overlay-bottom':
-          'linear-gradient(to top, rgba(20, 32, 25, 0.92) 0%, rgba(20, 32, 25, 0.55) 40%, rgba(20, 32, 25, 0.15) 70%, transparent 100%)',
+          'linear-gradient(to top, rgba(20, 32, 25, 0.96) 0%, rgba(20, 32, 25, 0.92) 25%, rgba(20, 32, 25, 0.70) 45%, rgba(20, 32, 25, 0.30) 70%, transparent 100%)',
         'overlay-full':
-          'linear-gradient(to bottom, rgba(20, 32, 25, 0.35) 0%, rgba(20, 32, 25, 0.55) 60%, rgba(20, 32, 25, 0.85) 100%)',
+          'linear-gradient(to bottom, rgba(20, 32, 25, 0.20) 0%, rgba(20, 32, 25, 0.50) 50%, rgba(20, 32, 25, 0.92) 100%)',
+        'scrim-bottom':
+          'linear-gradient(to top, rgba(20, 32, 25, 0.95) 0%, rgba(20, 32, 25, 0.85) 35%, rgba(20, 32, 25, 0.4) 70%, transparent 100%)',
         'sage-radial':
           'radial-gradient(120% 80% at 50% 0%, #EFE7D6 0%, #F7F2EA 60%)',
       },
