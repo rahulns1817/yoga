@@ -1,4 +1,4 @@
-# Sukha — Yoga for everyday wellness
+# Sukha — Yoga for everyday wellness-its what it is
 
 A mobile-first web POC that maps everyday lifestyle problems (stress, headache, bloating, insomnia, fatigue, back pain, etc.) to recommended yoga asanas. Designed to read as a phone-shaped preview on any viewport so it can stand in for the eventual native mobile app.
 
