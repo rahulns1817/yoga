@@ -7,7 +7,7 @@ import PageFrame from '../components/PageFrame'
 import SearchBar from '../components/SearchBar'
 import { HERO_PHOTOS, INSPIRATION_PHOTO, POSE_OF_DAY_PHOTO } from '../lib/images'
 import { filterProblems, PROBLEMS } from '../lib/lookups'
-import { isSlowModeEnabled, SLOW_HERO_DELAY_MS } from '../lib/perfMode'
+import { installRuntimePenalties, isSlowModeEnabled } from '../lib/perfMode'
 import { useReducedMotion } from '../lib/useReducedMotion'
 
 const DAILY_TIPS = [
@@ -21,6 +21,10 @@ export default function Landing() {
   const [query, setQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const reduced = useReducedMotion()
+
+  useEffect(() => {
+    installRuntimePenalties()
+  }, [])
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQuery(query), 150)
@@ -108,13 +112,6 @@ export default function Landing() {
 
 function Hero() {
   const slow = isSlowModeEnabled()
-  const [heroSrc, setHeroSrc] = useState<string | undefined>(slow ? undefined : HERO_PHOTOS[0])
-
-  useEffect(() => {
-    if (!slow) return
-    const t = setTimeout(() => setHeroSrc(HERO_PHOTOS[0]), SLOW_HERO_DELAY_MS)
-    return () => clearTimeout(t)
-  }, [slow])
 
   return (
     <section className="relative h-[600px] w-full overflow-hidden bg-forest-deep">
@@ -123,15 +120,13 @@ function Hero() {
           Slow mode
         </div>
       )}
-      {heroSrc && (
-        <img
-          src={heroSrc}
-          alt=""
-          aria-hidden
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: 'center 30%' }}
-        />
-      )}
+      <img
+        src={HERO_PHOTOS[0]}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ objectPosition: 'center 30%' }}
+      />
       <div
         className="absolute inset-0"
         aria-hidden

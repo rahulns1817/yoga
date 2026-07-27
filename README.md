@@ -54,12 +54,18 @@ To reproduce a "Poor" Web Vitals reading on demand (for verifying Lighthouse bud
 https://<site>.netlify.app/?slow=1
 ```
 
-When enabled (persists in `sessionStorage` for the tab), the app deliberately:
+When enabled (persists in `sessionStorage` for the tab), the app deliberately targets every Core Web Vital:
 
-- delays the Landing hero image src by **5.5s** so LCP consistently exceeds the 4.5s "Poor" threshold,
-- runs a **~700ms** synchronous CPU block at boot to inflate FCP + TBT,
-- forces a heavy synchronous JSON parse to keep the main thread busy longer,
-- shows a **SLOW MODE** badge in the top-right of the hero so it's obvious this is a test session.
+| Metric | Regression |
+|---|---|
+| **LCP** | Entire React mount is deferred **~5s** — no contentful element paints before the deadline, so LCP is measured after that. Consistently > 5s ("Poor" threshold is 4.5s). |
+| **FCP** | Same mount deferral pushes First Contentful Paint above the 3s "Poor" threshold. |
+| **TBT** | **~800ms** synchronous CPU busy-loop at boot + a **30,000-row** JSON parse + a layout-thrashing forced-reflow loop. TBT balloons into the "Poor" bucket. |
+| **CLS** | After mount, a **140 px terracotta banner** is injected at the top of the body for 1.4s (shifts all content down), then removed (shift back). A second reflow follows via a root font-size nudge. Cumulative Layout Shift > 0.25. |
+| **INP** | Global `click` + `keydown` handlers each run a **400ms** synchronous busy-loop, so every interaction stalls the main thread. |
+| **Scroll jank** | A `scroll` listener does **~50ms** of synchronous work per event, generating Long Tasks throughout the scroll timeline. |
+| **Bundle** | A **~200 KB** inline padding string is anchored to `window` so tree-shaking preserves it, inflating parse/compile time. |
+| **Visual cue** | A **SLOW MODE** pill badge shows in the hero so test sessions are visually distinct from real traffic. |
 
 Disable with `?slow=0` (clears the flag) or close the tab.
 
