@@ -46,6 +46,25 @@ npm run preview # serve dist/ locally
 - **Curated dataset** — 10 problems × 3–5 asanas = 33 entries, each with Sanskrit + English name, duration, difficulty, illustrated steps, and problem-specific benefits. Lives in `src/data/problems.ts`. Lookup helpers in `src/lib/lookups.ts`.
 - **Wisdom dataset** — 85+ entries in `src/data/facts.ts` tagged as `sutra | quote | research | tradition | fact`, each with source attribution (Patanjali sutra numbers, Bhagavad Gita verses, modern teacher names, full journal citations).
 
+## Perf-regression test mode
+
+To reproduce a "Poor" Web Vitals reading on demand (for verifying Lighthouse budgets, RUM alerting, perf-monitoring dashboards, or CI budget checks), append `?slow=1` to any URL:
+
+```
+https://<site>.netlify.app/?slow=1
+```
+
+When enabled (persists in `sessionStorage` for the tab), the app deliberately:
+
+- delays the Landing hero image src by **5.5s** so LCP consistently exceeds the 4.5s "Poor" threshold,
+- runs a **~700ms** synchronous CPU block at boot to inflate FCP + TBT,
+- forces a heavy synchronous JSON parse to keep the main thread busy longer,
+- shows a **SLOW MODE** badge in the top-right of the hero so it's obvious this is a test session.
+
+Disable with `?slow=0` (clears the flag) or close the tab.
+
+Off by default. No production traffic is affected unless the query param is present.
+
 ## Not medical advice
 
 Sample content is "convincing demo" quality, not certified by a yoga therapist or medical professional. If you're injured or pregnant, talk to a teacher before practicing.
